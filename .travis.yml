@@ -53,9 +53,9 @@ script:
 
 after_success:
   - mkdir out
-  - mv ./qpdfview-x86_64*.AppImage ./out/
-  - md5sum ./out/qpdfview-x86_64*.AppImage > ./out/MD5.txt
-  - curl --upload-file ./out/qpdfview-x86_64*.AppImage https://transfer.sh/
+  - mv ./qpdfview*.AppImage ./out/
+  - md5sum ./out/qpdfview*.AppImage > ./out/MD5.txt
+  - curl --upload-file ./out/qpdfview*.AppImage https://transfer.sh/
 
 branches:
   except:
