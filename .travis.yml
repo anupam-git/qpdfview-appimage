@@ -56,10 +56,10 @@ script:
   - ./build.sh
 
 after_success:
-  - mkdir out
-  - mv ./qpdfview*.AppImage ./out/
-  - md5sum ./out/qpdfview*.AppImage > ./out/MD5.txt
-  - curl --upload-file ./out/qpdfview*.AppImage https://transfer.sh/
+  - mkdir -p ./qpdfview/build/out
+  - mv ./qpdfview/build/qpdfview*.AppImage ./qpdfview/build/out/
+  - md5sum ./qpdfview/build/out/qpdfview*.AppImage > ./qpdfview/build/out/MD5.txt
+  - curl --upload-file ./qpdfview/build/out/qpdfview*.AppImage https://transfer.sh/
 
 branches:
   except:
