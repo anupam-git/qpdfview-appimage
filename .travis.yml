@@ -46,7 +46,6 @@ script:
   - export QML_MODULES_FIND_DIRS="/opt/qt510/qml /usr/lib/x86_64-linux-gnu/qml"
   - export VERSION=$(git rev-parse --short HEAD)
   - sudo ldconfig -c /opt/qt510/lib/ /usr/lib/x86_64-linux-gnu/  
-  - cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_PREFIX_PATH="/opt/qt510/"
   - ./build.sh
 
 after_success:
