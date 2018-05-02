@@ -25,6 +25,7 @@ addons:
       - qt510graphicaleffects
       - qt510x11extras
       - qt510svg
+      - libpoppler-qt5-dev
 
 before_install:
   - wget https://github.com/nomad-desktop/precompiled-kf5-linux/releases/download/continuous/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz -O /tmp/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz
