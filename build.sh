@@ -54,9 +54,3 @@ cd ..
 ### CREATE APPIMAGE
 ./appimagetool-x86_64.AppImage appdir || exit 1
 ###################
-
-### UPLOAD APPIMAGE
-mkdir -p out
-mv ./qpdfview-x86_64*.AppImage ./out/
-md5sum ./out/qpdfview-x86_64*.AppImage > ./out/MD5.txt
-###################
