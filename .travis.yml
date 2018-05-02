@@ -28,16 +28,19 @@ addons:
       - libpoppler-qt5-dev
       - libspectre-dev
       - libcups2-dev
+      - breeze-icon-theme
 
 before_install:
   - wget https://github.com/nomad-desktop/precompiled-kf5-linux/releases/download/continuous/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz -O /tmp/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz
   - git clone https://github.com/KDE/extra-cmake-modules.git
+  - wget http://ftp.debian.org/debian/pool/main/p/patchelf/patchelf_0.8-2_amd64.deb -O /tmp/patchelf_0.8-2_amd64.deb
+  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh -O upload.sh
   - chmod a+x ./build.sh
   - chmod a+x ./appimage.create.wrapper.sh
-  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh -O upload.sh
   - chmod a+x ./upload.sh
 
 install:
+  - sudo dpkg -i /tmp/patchelf_0.8-2_amd64.deb
   - cd extra-cmake-modules/ && cmake . && make -j$(nproc) && sudo make -j$(nproc) install && cd ..
   - sudo tar xpf /tmp/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz -C /usr/
   - sudo update-alternatives --install /usr/bin/qmake qmake /opt/qt510/bin/qmake 1
