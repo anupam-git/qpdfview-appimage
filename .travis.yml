@@ -1,0 +1,72 @@
+language: cpp
+compiler: gcc
+dist: trusty
+sudo: required
+
+notifications:
+  email: false
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:beineri/opt-qt-5.10.1-trusty'
+
+    packages:
+      - wget
+      - git
+      - cmake
+      - libxml2-utils
+      - libgl1-mesa-dev
+      - qt510base
+      - qt510declarative
+      - qt510xmlpatterns
+      - qt510quickcontrols
+      - qt510quickcontrols2
+      - qt510graphicaleffects
+      - qt510x11extras
+      - qt510svg
+
+before_install:
+  - wget https://github.com/nomad-desktop/precompiled-kf5-linux/releases/download/continuous/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz -O /tmp/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz
+  - git clone https://github.com/KDE/extra-cmake-modules.git
+  - chmod a+x ./build.sh
+  - chmod a+x ./appimage.create.wrapper.sh
+  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh -O upload.sh
+  - chmod a+x ./upload.sh
+
+install:
+  - cd extra-cmake-modules/ && cmake . && make -j$(nproc) && sudo make -j$(nproc) install && cd ..
+  - sudo tar xpf /tmp/kf5-5.44.0-Release-ubuntu-trusty-amd64.tar.xz -C /usr/
+  - sudo update-alternatives --install /usr/bin/qmake qmake /opt/qt510/bin/qmake 1
+
+script:
+  - /opt/qt510/bin/qt510-env.sh
+  - export QT_SELECT=qt5
+  - export PATH=$PATH:/opt/qt510/bin/
+  - export QML_MODULES_FIND_DIRS="/opt/qt510/qml /usr/lib/x86_64-linux-gnu/qml"
+  - export VERSION=$(git rev-parse --short HEAD)
+  - sudo ldconfig -c /opt/qt510/lib/ /usr/lib/x86_64-linux-gnu/  
+  - cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_PREFIX_PATH="/opt/qt510/"
+  - ./build.sh
+
+after_success:
+  - mkdir out
+  - mv ./qpdfview-x86_64*.AppImage ./out/
+  - md5sum ./out/qpdfview-x86_64*.AppImage > ./out/MD5.txt
+  - curl --upload-file ./out/qpdfview-x86_64*.AppImage https://transfer.sh/
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
+
+before_deploy:
+  - if [ -z "$TRAVIS_TAG" ]; then export TRAVIS_TAG="continuous"; git tag -f $TRAVIS_TAG; fi
+
+deploy:
+  provider: script
+  script: ./upload.sh out/*
+  skip_cleanup: true
+  on:
+    repo: anupam-git/qpdfview-appimage
+    branch: master
