@@ -71,7 +71,7 @@ before_deploy:
 
 deploy:
   provider: script
-  script: ./upload.sh out/*
+  script: ./upload.sh ./qpdfview/build/out/*
   skip_cleanup: true
   on:
     repo: anupam-git/qpdfview-appimage
